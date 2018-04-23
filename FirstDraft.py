@@ -2,18 +2,9 @@ from __future__ import print_function
 import os
 
 print("Welcome to AHP Calculator written By Khalid G. Khair")
-# Check if the user have a previous file or would like to create a new one
 
-user_answer = raw_input("do you wish to use a previous pairwise comparision file ?(y/n): ").lower().strip()
-if user_answer == "y":
-    path = raw_input("enter the file location: ")
-    pairwise_file = open(path, "r+")
-    print(pairwise_file.read())
-elif user_answer == "n":
-    path = raw_input("enter the location and name of the new file: C:\Users\KhALiD\Desktop\ tess.txt ")
-    pairwise_file = open(path, "w")
-else:
-    print("wrong answer, please try again")
+path = raw_input("enter the location and name of the new file: ")
+pairwise_file = open(path, "w")
 
 # Decide the Number of needed factors for comparision
 
