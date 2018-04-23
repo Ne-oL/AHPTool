@@ -24,7 +24,7 @@ class AHP(object):
     def getParameterInfo(self):
         """Define parameter definitions"""
 
-## The First Parameter takes the factors 
+        ## The First Parameter takes the factors 
         
         param0 = arcpy.Parameter()
         param0.name= "parameter0"
@@ -34,7 +34,7 @@ class AHP(object):
         param0.parameterType="Required"
         param0.multiValue=True
 
-## The Second Parameter takes the user desired output location and output name
+        ## The Second Parameter takes the user desired output location and output name
         
         param1 = arcpy.Parameter()
         param1.name= "parameter1"
@@ -43,7 +43,7 @@ class AHP(object):
         param1.datatype="DEFile"
         param1.parameterType="Required"
 
-## The Third Parameter is a Boolean that takes the User preference regarding his desire to export his result to a Terrset compatible files that will accompany the output file
+        ## The Third Parameter is a Boolean that takes the User preference regarding his desire to export his result to a Terrset compatible files that will accompany the output file
 
         param2 = arcpy.Parameter()
         param2.name = "parameter2"
@@ -68,7 +68,7 @@ class AHP(object):
         """Modify the messages created by internal validation for each tool
         parameter.  This method is called after internal validation."""
 
-## Check if the number of inserted factors is below or above the limits of the Tool
+        ## Check if the number of inserted factors is below or above the limits of the Tool
         
         if parameters[0].altered and parameters[1].hasBeenValidated:
             factorsinput=parameters[0].valueAsText
@@ -84,7 +84,7 @@ class AHP(object):
     def execute(self, parameters, messages):
         """The source code of the tool."""
 
-## Reading Factors from File
+        ## Reading Factors from File
 
         factorsinput=parameters[0].valueAsText
         factors=factorsinput.split(";")
@@ -99,7 +99,7 @@ class AHP(object):
             factors[x]=os.path.splitext(os.path.basename(factors[x]))[0]
             x+=1
             
-## Create the main table that will hold the factors and their weights based on the user input
+        ## Create the main table that will hold the factors and their weights based on the user input
 
         com_board = [["" for i in range(No_Factors)] for z in range(No_Factors)]
         n=0
@@ -116,19 +116,19 @@ class AHP(object):
             x += 1
         print_table = pd.DataFrame(data=com_board, index=factors, columns=factors, dtype=numpy.float64)
 
-## Write the newly created table to a Microsoft Excel File
+        ## Write the newly created table to a Microsoft Excel File
 
         writer = pd.ExcelWriter(opath)
         print_table.to_excel(writer,'Judgment Value Matrix')
         writer.save()
         
 
-## Start the Microsoft Excel application to allow the user to insert the factors proirity in a pairwise comparision table
+        ## Start the Microsoft Excel application to allow the user to insert the factors proirity in a pairwise comparision table
         
         os.system('start excel.exe {}'.format(opath))
         time.sleep(15)
 
-## Check to see if the User still have the Excel file open or not
+        ## Check to see if the User still have the Excel file open or not
         
         x=0
         z=0
@@ -143,7 +143,7 @@ class AHP(object):
                     z=0
                 z+=1
 
-## Once the program verified that the file is closed, it will read the file and load its content into the dataframe inside the program for further prossesing
+        ## Once the program verified that the file is closed, it will read the file and load its content into the dataframe inside the program for further prossesing
 
         print_table = pd.read_excel(opath)
         x = 0
@@ -154,13 +154,13 @@ class AHP(object):
                 z += 1
             x += 1
 
-## then overwrite the processed content into the same Excel file and save it into the first sheet under the 'Judgment Value Matrix' name
+        ## then overwrite the processed content into the same Excel file and save it into the first sheet under the 'Judgment Value Matrix' name
 
         writer = pd.ExcelWriter(opath)
         print_table.to_excel(writer,'Judgment Value Matrix')
 
 
-## Calculate Total value for each Column from the processed excel file
+        ## Calculate Total value for each Column from the processed excel file
         x = 0
         tot_factors = [0 for i in range(No_Factors)]
         while x < No_Factors:
@@ -170,7 +170,7 @@ class AHP(object):
                 j += 1
             x += 1
 
-## Calculate the Normalized values for Each Factor and save it into the second sheet under the 'Normalized Values' name
+        ## Calculate the Normalized values for Each Factor and save it into the second sheet under the 'Normalized Values' name
             
         norm_factors = print_table.copy(deep=True).astype("float64", copy=True)
         x = 0
@@ -182,14 +182,14 @@ class AHP(object):
             x += 1
         norm_factors.to_excel(writer,'Normalized Values')
 
-## Calculate the Priority vector or weight Values and save it into the third sheet under the 'Priority Vector or Weights' name
+        ## Calculate the Priority vector or weight Values and save it into the third sheet under the 'Priority Vector or Weights' name
         
         priority_vector = norm_factors.sum(axis=1) / No_Factors
         p_vector=priority_vector.to_frame(name="Priority vector or Weight")
         p_vector.to_excel(writer, 'Priority Vector or Weights')
 
 
-## Calculate Consistancy Ratio
+        ## Calculate Consistancy Ratio
         x = 0
         Eigen_Value = 0
         factors_temp=[i for i in range(No_Factors)]
@@ -239,7 +239,7 @@ class AHP(object):
         else:
             str = "CR = {}  Which is NOT within the Acceptable Range 0.0-0.10".format(cr)
 
-## Save the final results into the excel file in the fourth sheet under the "Final Results" name 
+        ## Save the final results into the excel file in the fourth sheet under the "Final Results" name 
 
         fin_data = pd.DataFrame(data=[[Eigen_Value," "], [ci, " "], [ri, " "], [cr, str]], index=["Principal Eigen Value", "Consistency index", "Random Consistency Index", "Consistency Ratio"], columns=["Values", " "])
         fin_data.to_excel(writer, 'Final Results')
@@ -248,7 +248,7 @@ class AHP(object):
         time.sleep(3)
         os.system('start excel.exe {}'.format(opath))
 
-## Creating and printing the results to a pcf File based on the User preference
+        ## Creating and printing the results to a pcf File based on the User preference
         
         if parameters[2].value==True:
             path = opath[0:-4]+".pcf"
@@ -269,7 +269,7 @@ class AHP(object):
             pairwise_file.close()
             arcpy.SetParameter(2, pairwise_file)
 
-## Creating and printing the results to a dsf File based on the User preference
+        ## Creating and printing the results to a dsf File based on the User preference
 
             path2 = opath[0:-4]+".dsf"
             pairwise_file2 = open(path2, "w")
@@ -282,8 +282,6 @@ class AHP(object):
                 x+=1
             pairwise_file2.close()
             arcpy.SetParameter(2, pairwise_file2)
-
-            
         return
 
 
