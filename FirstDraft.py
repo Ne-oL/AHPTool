@@ -3,7 +3,7 @@ import os
 
 print("Welcome to AHP Calculator written By Khalid G. Khair")
 
-path = raw_input("enter the location and name of the new file: ")
+path = raw_input("enter the location and name of the output file: ")
 pairwise_file = open(path, "w")
 
 # Decide the Number of needed factors for comparision
