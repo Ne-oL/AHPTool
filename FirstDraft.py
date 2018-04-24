@@ -6,11 +6,11 @@ print("Welcome to AHP Calculator written By Khalid G. Khair")
 path = raw_input("enter the location and name of the output file: ")
 pairwise_file = open(path, "w")
 
-# Decide the Number of needed factors for comparision
+# Decide the Number of Factors as well as their names
 
 No_Factors = int(raw_input("Please Enter the number of factors (3-15): "))
 if No_Factors > 15 or No_Factors < 3:
-    print("The Number of Factors you have chosen can not be calculated, Exiting the program...")
+    p rint("The Number of Factors you have chosen can not be calculated, Exiting the program...")
     raise SystemExit
 n = 0
 factors = {}
@@ -88,6 +88,8 @@ while x <= No_Factors:
     print()
     x += 1
 
+# Normalization & weight determination
+    
 print("priority vector or weight Values")
 x = 0
 priority_vector = [0 for i in range(No_Factors)]
